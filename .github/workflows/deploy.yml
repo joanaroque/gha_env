@@ -6,13 +6,12 @@ on:
       - dev
 env:
   MONGODB_DB_NAME: gha-demo
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 jobs:
   test:
     env:
       MONGODB_CLUSTER_ADDRESS: cluster0.spellmx.mongodb.net
-      MONGODB_USERNAME: joanaramosque_db_user
-      MONGODB_PASSWORD: tyvhKzRWKPdI7IBv
+      MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
+      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
       PORT: 8080 # or 3000
     environment: testing
     runs-on: ubuntu-latest
