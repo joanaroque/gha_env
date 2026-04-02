@@ -2,7 +2,7 @@ import bodyParser from 'body-parser';
 import express from 'express';
 
 import eventRoutes from './routes/events.js';
-import { connectToDatabase } from './database.js';
+import { connectToDatabase } from './data/database.js';
 
 const app = express();
 
