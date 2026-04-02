@@ -6,7 +6,9 @@ const client = new MongoClient(uri);
 let db;
 
 export async function connectToDatabase() {
-  if (db) return db;
+  if (db) {
+    return db;
+  }
 
   try {
     console.log('Trying to connect to db');
