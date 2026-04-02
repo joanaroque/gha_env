@@ -1,25 +1,29 @@
 import { MongoClient } from 'mongodb';
 
-const clusterAddress = process.env.MONGODB_CLUSTER_ADDRESS;
-const dbUser = process.env.MONGODB_USERNAME;
-const dbPassword = process.env.MONGODB_PASSWORD;
-const dbName = process.env.MONGODB_DB_NAME;
-
-const uri = `mongodb+srv://${dbUser}:${dbPassword}@${clusterAddress}/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER_ADDRESS}/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri);
 
-console.log('Trying to connect to db');
+let db;
 
-try {
-  await client.connect();
-  await client.db(dbName).command({ ping: 1 });
-  console.log('Connected successfully to server');
-} catch (error) {
-  console.log('Connection failed.');
-  await client.close();
-  console.log('Connection closed.');
+export async function connectToDatabase() {
+  if (db) return db;
+
+  try {
+    console.log('Trying to connect to db');
+    await client.connect();
+    console.log('Connected successfully to database');
+    db = client.db(process.env.MONGODB_DB_NAME);
+    return db;
+  } catch (error) {
+    console.error('Connection failed:', error);
+    await client.close();
+    process.exit(1);
+  }
 }
 
-const database = client.db(dbName);
-
-export default database;
+export function getDb() {
+  if (!db) {
+    throw new Error('Database not initialized. Call connectToDatabase first!');
+  }
+  return db;
+}
